@@ -1,36 +1,38 @@
-<<<<<<< HEAD
 from dao.db_config import supabase
 
 class StudentService:
     @staticmethod
     def add_student(name, email):
-        data = {"name": name, "email": email}
-        supabase.table("student").insert(data).execute()
-        print("Student added successfully!")
-        
+        if not name or not email:
+            raise ValueError("Name and email must not be empty.")
+        try:
+            data = {"name": name, "email": email}
+            result = supabase.table("student").insert(data).execute()
+            if not result or result.data is None:
+                raise Exception("Failed to insert student.")
+            print("Student added successfully!")
+        except Exception as e:
+            print(f"Failed to add student: {e}")
+            raise e
+
     @staticmethod
     def list_students():
-        result = supabase.table("student").select("*").execute()
-        return result.data if result.data else []
-    
+        try:
+            result = supabase.table("student").select("*").execute()
+            if not result or result.data is None:
+                raise Exception("Failed to retrieve students.")
+            return result.data
+        except Exception as e:
+            print(f"Failed to list students: {e}")
+            return []
+
     @staticmethod
     def delete_student(student_id):
-        supabase.table("student").delete().eq("student_id", student_id).execute()
-        print(f"Student {student_id} deleted.")
-
-=======
-from dao.db_config import supabase
-
-class StudentService:
-    @staticmethod
-    def add_student(name, email):
-        data = {"name": name, "email": email}
-        supabase.table("student").insert(data).execute()
-        print("Student added successfully!")
-
-    @staticmethod
-    def list_students():
-        students = supabase.table("student").select("*").execute()
-        for s in students.data:
-            print(f"{s['student_id']} - {s['name']} - {s['email']}")
->>>>>>> 43fa1d364497bf14423a758edbaafb358bec959f
+        try:
+            result = supabase.table("student").delete().eq("student_id", student_id).execute()
+            if not result or result.data is None:
+                raise Exception("Failed to delete student.")
+            print(f"Student {student_id} deleted.")
+        except Exception as e:
+            print(f"Failed to delete student: {e}")
+            raise e
