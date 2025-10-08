@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 streamlit
 python-dotenv
 supabase
+=======
+streamlit
+python-dotenv
+supabase
+>>>>>>> 43fa1d364497bf14423a758edbaafb358bec959f
